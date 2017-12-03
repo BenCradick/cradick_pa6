@@ -28,5 +28,5 @@ int main(int argc, char* argv[]){
         i++;
     }
 
-    return 0;
+    int pr_limit = atoi(argv[1]);
 }
