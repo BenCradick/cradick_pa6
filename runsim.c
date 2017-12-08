@@ -12,9 +12,10 @@
 
 int main(int argc, char* argv[]){
 
+    typedef enum {false, true} bool;
     int i = 0;
     //sets pid_t to 0 and gives it a nicer name
-    pid_t pid = 0;
+    pid_t pid;
     //checks appropriate number of arguments are made.
     if(argc != 2)
     {
@@ -41,6 +42,36 @@ int main(int argc, char* argv[]){
 
     while(fgets(stream, max_buf, stdin) != NULL)
     {
+        char streamPart[2][max_buf];
+        int count = 0;
+        bool first = true;
+        for(int i = 0; i < sizeof(stream); i++){
+            if(first && isdigit(stream[i])){
+                first = false;
+                count = 0;
+                while(isdigit(stream[i])){
+                    streamPart[1][count] = stream[i];
+                    printf("%c", streamPart[1][count] );
+                    count++;
+                    i++;
+                }
+                printf("\n");
+                count = 0;
+            }
+            else if(!first && isdigit(stream[i])){
+                while(isdigit(stream[i])){
+                    streamPart[2][count] = stream[i];
+                    printf("%c\n", streamPart[2][count]);
+                    count++;
+                    i++;
+                }
+                printf("\n");
+            }
+            else{
+                streamPart[0][count] = stream[i];
+                count++;
+            }
+        }
         if(pr_count == pr_limit){
             wait(&status);
             pr_count--;
@@ -52,13 +83,13 @@ int main(int argc, char* argv[]){
             printf("fork() returned -1 unable to create fork");
             break;
         }
-        else if(pid == 0){
+        else if(pid > 0){
             break;
         }
-        execl(stream,(char *)NULL);
+        execl(streamPart[0],streamPart[1], streamPart[2],(char *)NULL);
     }
 
 
-    fprintf(stderr, "pr_count:%d process ID:%ld parent ID:%ld child ID:%ld\n", pr_count, getpid(), getppid(), pid);
+    fprintf(stderr, "pr_count:%d process ID:%d parent ID:%d child ID:%d\n", pr_count, getpid(), getppid(), pid);
 
 }
