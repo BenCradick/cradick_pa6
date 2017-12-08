@@ -33,26 +33,32 @@ int main(int argc, char* argv[]){
 
     int pr_limit = atoi(argv[1]);
     int pr_count = 0;
-    FILE *fp = fopen(stdin, "r");
-    char stream[MAX_BUF];
-    if(fp == NULL)
-    {
-        printf("Could not read input file");
-        return;
-    }
-    while(!feof(fp))
+    int max_buf = 60;
+
+    char stream[max_buf];
+    int status;
+
+
+    while(fgets(stream, max_buf, stdin) != NULL)
     {
         if(pr_count == pr_limit){
-            wait();
+            wait(&status);
+            pr_count--;
         }
 
-        fgets(stream, MAX_BUF, fp);
-
-
-
+        pid = fork();
+        pr_count++;
+        if(pid < 0){
+            printf("fork() returned -1 unable to create fork");
+            break;
+        }
+        else if(pid == 0){
+            break;
+        }
+        execl(stream,(char *)NULL);
     }
 
 
-
+    fprintf(stderr, "pr_count:%d process ID:%ld parent ID:%ld child ID:%ld\n", pr_count, getpid(), getppid(), pid);
 
 }

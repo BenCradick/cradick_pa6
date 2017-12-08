@@ -180,3 +180,4 @@ tags
 # End of https://www.gitignore.io/api/c,git,vim,macos,cmake,clion
 
 testsim.c
+testing.data
