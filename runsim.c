@@ -14,7 +14,7 @@ int main(int argc, char* argv[]){
 
     int i = 0;
     //sets pid_t to 0 and gives it a nicer name
-    pid_t = childpid = 0;
+    pid_t pid = 0;
     //checks appropriate number of arguments are made.
     if(argc != 2)
     {
@@ -45,7 +45,10 @@ int main(int argc, char* argv[]){
         if(pr_count == pr_limit){
             wait();
         }
+
         fgets(stream, MAX_BUF, fp);
+
+
 
     }
 
