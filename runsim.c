@@ -10,10 +10,11 @@
 #include <string.h>
 #include <unistd.h>
 
+
 int main(int argc, char* argv[]){
 
 
-    int i = 0;
+    int childpid, i = 0;
     //sets pid_t to 0 and gives it a nicer name
     pid_t pid = 0;
     //checks appropriate number of arguments are made.
@@ -43,19 +44,18 @@ int main(int argc, char* argv[]){
     while(!feof(stdin))
     {
 
-        if(pr_count == pr_limit){
+        if(pr_count >= pr_limit && childpid != 0){
             wait(&status);
             pr_count--;
         }
 
-        pid = fork();
-        pr_count++;
-        if(pid < 0){
-            printf("fork() returned -1 unable to create fork\n");
-            break;
+        childpid = fork();
+        if(childpid != 0){
+            pr_count++;
         }
-        else if(pid == 0){
+        else{
             execl(".", "/testsim", "1", "1",(char *)NULL);
+            exit(0);
         }
         if(waitpid(pid, &status, WNOHANG)!= -1)
         {
